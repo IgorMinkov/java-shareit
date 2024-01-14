@@ -20,10 +20,13 @@ public class ItemRequest {
 
     @Positive
     private Long id;
+
     @NotBlank
     private String description;
+
     @NotNull
     private User requester;
+
     @NotNull
     @PastOrPresent
     private LocalDateTime created;
