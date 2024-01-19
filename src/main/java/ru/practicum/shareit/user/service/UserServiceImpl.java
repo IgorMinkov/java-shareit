@@ -22,16 +22,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
+        repository.validateEmail(user.getEmail());
         return repository.create(user);
     }
 
     @Override
     public User update(User user, Long userId) {
+        repository.getById(userId);
         return repository.update(user, userId);
     }
 
     @Override
     public void delete(Long userId) {
+        repository.getById(userId);
         repository.delete(userId);
     }
 
