@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -31,9 +31,11 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@Valid @RequestBody UserDto userDto, @Positive @PathVariable Long userId) {
-        User user = mapper.toUser(userDto);
-        User updatedUser = userService.update(user, userId);
+    public UserDto updateUser(
+            @Valid @RequestBody UserDto userDto,
+            @Positive @PathVariable Long userId
+    ) {
+        User updatedUser = userService.update(mapper.toUser(userDto), userId);
         log.info("Обновлен пользователь: {} ", updatedUser);
         return mapper.toUserDto(updatedUser);
     }
