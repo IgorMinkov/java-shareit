@@ -70,4 +70,13 @@ public class ItemController {
                 .collect(Collectors.toList());
     }
 
+    @DeleteMapping("/{itemId}")
+    public void deleteUser(
+            @RequestHeader(X_SHARED_USER_ID) Long userId,
+            @Positive @PathVariable Long itemId
+    ) {
+        itemService.delete(userId, itemId);
+        log.info("Предмет с id: {} удален владельцем", itemId);
+    }
+
 }

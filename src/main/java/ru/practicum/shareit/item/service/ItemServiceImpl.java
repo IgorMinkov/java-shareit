@@ -37,4 +37,7 @@ public class ItemServiceImpl implements ItemService {
         return null;
     }
 
+    @Override
+    public void delete(Long ownerId, Long itemId) {}
+
 }
