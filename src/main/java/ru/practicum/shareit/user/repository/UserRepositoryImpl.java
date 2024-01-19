@@ -18,22 +18,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User add(User user) {
+    public User create(User user) {
         return null;
     }
 
     @Override
-    public User update(User user, long userId) {
+    public User update(User user, Long userId) {
         return null;
     }
 
     @Override
-    public void delete(long userId) {
+    public void delete(Long userId) {
 
     }
 
     @Override
-    public User getById(long userId) {
+    public User getById(Long userId) {
         return null;
     }
 }

@@ -17,27 +17,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return null;
+        return repository.getAll();
     }
 
     @Override
-    public User add(User user) {
-        return null;
+    public User create(User user) {
+        return repository.create(user);
     }
 
     @Override
-    public User update(User user, long userId) {
-        return null;
+    public User update(User user, Long userId) {
+        return repository.update(user, userId);
     }
 
     @Override
-    public void delete(long userId) {
-
+    public void delete(Long userId) {
+        repository.delete(userId);
     }
 
     @Override
-    public User getById(long userId) {
-        return null;
+    public User getById(Long userId) {
+        return repository.getById(userId);
     }
 
 }
