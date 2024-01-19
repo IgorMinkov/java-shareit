@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.practicum.shareit.user.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,7 +26,8 @@ public class Item {
     @NotNull
     private Boolean available;
 
-    private User owner;
+    @JsonProperty("owner")
+    private Long ownerId;
 
     private Long request;
 

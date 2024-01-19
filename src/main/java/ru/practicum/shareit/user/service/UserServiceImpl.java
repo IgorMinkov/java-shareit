@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-        repository.validateEmail(user.getEmail());
+        repository.validateEmail(user.getEmail(), 0L);
         return repository.create(user);
     }
 

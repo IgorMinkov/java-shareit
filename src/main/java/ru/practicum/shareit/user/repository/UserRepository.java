@@ -16,6 +16,6 @@ public interface UserRepository {
 
     User getById(Long userId);
 
-    void validateEmail(String email);
+    void validateEmail(String email,  Long userId);
 
 }

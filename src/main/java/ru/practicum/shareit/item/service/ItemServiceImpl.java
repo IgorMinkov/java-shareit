@@ -17,7 +17,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item create(Long ownerId, Item item) {
-        userRepository.getById(ownerId);
         return itemRepository.create(ownerId, item);
     }
 
