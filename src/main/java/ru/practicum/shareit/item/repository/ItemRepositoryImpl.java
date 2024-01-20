@@ -29,7 +29,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item update(Item item, Long itemId, Long userId) {
         Item newItem = items.get(itemId);
         if (!Objects.equals(newItem.getOwnerId(), userId)) {
-            throw new DataNotFoundException("   ");
+            throw new DataNotFoundException(
+                    String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId)
+            );
         }
         if (item.getName() != null) {
             newItem.setName(item.getName());
@@ -41,6 +43,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             newItem.setAvailable(item.getAvailable());
         }
         items.put(itemId, newItem);
+        log.info("Обновлен предмет: {}", newItem);
         return newItem;
     }
 
@@ -91,9 +94,12 @@ public class ItemRepositoryImpl implements ItemRepository {
     public void delete(Long ownerId, Long itemId) {
         Item item = items.get(itemId);
         if (!Objects.equals(item.getOwnerId(), ownerId)) {
-            throw new DataNotFoundException("   ");
+            throw new DataNotFoundException(
+                    String.format("У пользователя %s не найден предмет c id: %s", ownerId, itemId)
+            );
         }
         items.remove(itemId);
+        log.info("Удален предмет с id: {} у пользователя с id: {}", itemId, ownerId);
     }
 
     private void generateItemId(Item item) {
