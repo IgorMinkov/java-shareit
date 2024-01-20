@@ -52,7 +52,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getById(Long userId) {
-        if(!users.containsKey(userId)) {
+        if (!users.containsKey(userId)) {
             throw new DataNotFoundException(String.format("Не найден пользователь c id: %s", userId));
         }
         return users.get(userId);
@@ -63,7 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
         boolean check = users.values().stream()
                 .filter(user -> !Objects.equals(user.getId(), userId))
                 .anyMatch(user -> user.getEmail().equals(email));
-        if(check) {
+        if (check) {
             throw new EmailAlreadyExistException("Пользователь с таким e-mail уже существует");
         }
     }
