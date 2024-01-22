@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,14 +68,13 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
 
         List<Item> nameResult = items.values().stream()
-                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()))
-//                .filter(item -> StringUtils.containsIgnoreCase(item.getName(), text))
+                .filter(item -> StringUtils.containsIgnoreCase(item.getName(), text))
                 .filter(Item::getAvailable)
                 .collect(Collectors.toList());
         Set<Item> result = new HashSet<>(nameResult);
 
         List<Item> descriptionResult = items.values().stream()
-                .filter(item -> item.getDescription().toLowerCase().contains(text.toLowerCase()))
+                .filter(item -> StringUtils.containsIgnoreCase(item.getDescription(), text))
                 .filter(Item::getAvailable)
                 .collect(Collectors.toList());
         result.addAll(descriptionResult);
