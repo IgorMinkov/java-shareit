@@ -25,16 +25,15 @@ public class ItemController {
     public static final String X_SHARED_USER_ID = "X-Sharer-User-Id";
 
     private final ItemService itemService;
-    private final ItemMapper mapper;
 
     @PostMapping
     public ItemDto addItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto
     ) {
-        Item item = itemService.create(userId, mapper.toItem(itemDto));
+        Item item = itemService.create(userId,ItemMapper.toItem(itemDto));
         log.info("Польователь {} добавил предмет: {}", userId, item.getName());
-        return mapper.toItemDto(item);
+        return ItemMapper.toItemDto(item);
     }
 
     @PatchMapping("/{itemId}")
@@ -43,22 +42,22 @@ public class ItemController {
             @RequestBody ItemDto itemDto,
             @Positive @PathVariable Long itemId
     ) {
-        Item updateItem = itemService.update(mapper.toItem(itemDto), itemId, userId);
+        Item updateItem = itemService.update(ItemMapper.toItem(itemDto), itemId, userId);
         log.info("Владелец {} обновил предмет: {}", userId, updateItem.getName());
-        return mapper.toItemDto(updateItem);
+        return ItemMapper.toItemDto(updateItem);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItem(@Positive @PathVariable Long itemId) {
         Item item = itemService.getById(itemId);
         log.info("Найден предмет по id: {} ", itemId);
-        return mapper.toItemDto(item);
+        return ItemMapper.toItemDto(item);
     }
 
     @GetMapping
     public List<ItemDto> getAllUserItems(@RequestHeader(X_SHARED_USER_ID) Long userId) {
         return itemService.getUserItems(userId).stream()
-                .map(mapper::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +65,7 @@ public class ItemController {
     public List<ItemDto> searchItems(@RequestParam(defaultValue = "") String text) {
         log.info("Запущен поиск по тексту: {}", text);
         return itemService.searchItems(text).stream()
-                .map(mapper::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 

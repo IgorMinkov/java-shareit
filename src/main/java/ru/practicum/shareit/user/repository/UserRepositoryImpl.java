@@ -32,9 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User update(User user, Long userId) {
         User newUser = users.get(userId);
-        if (user.getName() != null) {
-            newUser.setName(user.getName());
-        }
+        Optional.ofNullable(user.getName()).ifPresent(newUser::setName);
         if (user.getEmail() != null) {
             validateEmail(user.getEmail(), userId);
             newUser.setEmail(user.getEmail());

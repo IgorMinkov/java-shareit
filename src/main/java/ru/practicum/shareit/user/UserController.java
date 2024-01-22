@@ -21,13 +21,12 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper mapper;
 
     @PostMapping
     public UserDto addUser(@Valid @RequestBody UserDto userDto) {
-        User user = userService.create(mapper.toUser(userDto));
+        User user = userService.create(UserMapper.toUser(userDto));
         log.info("Добавлен пользователь: {} ", user);
-        return mapper.toUserDto(user);
+        return UserMapper.toUserDto(user);
     }
 
     @PatchMapping("/{userId}")
@@ -35,9 +34,9 @@ public class UserController {
             @RequestBody UserDto userDto,
             @Positive @PathVariable Long userId
     ) {
-        User updatedUser = userService.update(mapper.toUser(userDto), userId);
+        User updatedUser = userService.update(UserMapper.toUser(userDto), userId);
         log.info("Обновлен пользователь: {} ", updatedUser);
-        return mapper.toUserDto(updatedUser);
+        return UserMapper.toUserDto(updatedUser);
     }
 
     @DeleteMapping("/{userId}")
@@ -50,13 +49,13 @@ public class UserController {
     public UserDto getUser(@Positive @PathVariable Long userId) {
         User user = userService.getById(userId);
         log.info("Найден пользователь по id: {} ", user);
-        return mapper.toUserDto(user);
+        return UserMapper.toUserDto(user);
     }
 
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userService.getAll().stream()
-                .map(mapper::toUserDto)
+                .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 

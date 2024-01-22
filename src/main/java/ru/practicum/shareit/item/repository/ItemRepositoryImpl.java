@@ -33,15 +33,9 @@ public class ItemRepositoryImpl implements ItemRepository {
                     String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId)
             );
         }
-        if (item.getName() != null) {
-            newItem.setName(item.getName());
-        }
-        if (item.getDescription() != null) {
-            newItem.setDescription(item.getDescription());
-        }
-        if (item.getAvailable() != null) {
-            newItem.setAvailable(item.getAvailable());
-        }
+        Optional.ofNullable(item.getName()).ifPresent(newItem::setName);
+        Optional.ofNullable(item.getDescription()).ifPresent(newItem::setDescription);
+        Optional.ofNullable(item.getAvailable()).ifPresent(newItem::setAvailable);
         items.put(itemId, newItem);
         log.info("Обновлен предмет: {}", newItem);
         return newItem;
@@ -74,6 +68,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         List<Item> nameResult = items.values().stream()
                 .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()))
+//                .filter(item -> StringUtils.containsIgnoreCase(item.getName(), text))
                 .filter(Item::getAvailable)
                 .collect(Collectors.toList());
         Set<Item> result = new HashSet<>(nameResult);

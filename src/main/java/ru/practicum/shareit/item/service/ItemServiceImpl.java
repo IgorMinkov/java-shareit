@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
@@ -17,14 +18,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item create(Long ownerId, Item item) {
-        userRepository.getById(ownerId);
+        checkUser(ownerId);
         return itemRepository.create(ownerId, item);
     }
 
     @Override
     public Item update(Item item, Long itemId, Long userId) {
-        userRepository.getById(userId);
-        itemRepository.getById(itemId);
+        checkUser(userId);
+        checkItem(itemId);
         return itemRepository.update(item, itemId, userId);
     }
 
@@ -35,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getUserItems(Long userId) {
-        userRepository.getById(userId);
+        checkUser(userId);
         return itemRepository.getUserItems(userId);
     }
 
@@ -46,9 +47,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void delete(Long ownerId, Long itemId) {
-        userRepository.getById(ownerId);
-        itemRepository.getById(itemId);
+        checkUser(ownerId);
+        checkItem(itemId);
         itemRepository.delete(ownerId, itemId);
+    }
+
+    private void checkUser(Long id) {
+        User user = userRepository.getById(id);
+    }
+
+    private void checkItem(Long id) {
+        Item item = itemRepository.getById(id);
     }
 
 }
