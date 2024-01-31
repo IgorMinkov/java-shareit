@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
@@ -53,11 +52,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkUser(Long id) {
-        User user = userRepository.getById(id);
+        userRepository.getById(id);
     }
 
     private void checkItem(Long id) {
-        Item item = itemRepository.getById(id);
+        itemRepository.getById(id);
     }
 
 }

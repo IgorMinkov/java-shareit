@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUser(Long id) {
-        User user = repository.getById(id);
+        repository.getById(id);
     }
 
 }
