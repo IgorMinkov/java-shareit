@@ -1,8 +1,8 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.Status;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.Status;
 
 import java.util.Optional;
 
