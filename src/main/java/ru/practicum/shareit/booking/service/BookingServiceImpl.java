@@ -3,12 +3,17 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
+
+    private final BookingRepository bookingRepository;
+    private final UserService userService;
 
     @Override
     public Booking addBooking(Long userId, Booking booking) {
