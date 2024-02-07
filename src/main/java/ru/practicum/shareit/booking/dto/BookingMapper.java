@@ -9,7 +9,7 @@ import java.util.Optional;
 @UtilityClass
 public class BookingMapper {
 
-    public static BookingOutDto toBookingDto(Booking booking) {
+    public static BookingOutDto toBookingOutDto(Booking booking) {
         return new BookingOutDto(
                 booking.getId(),
                 booking.getStart(),
