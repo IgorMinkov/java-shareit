@@ -6,9 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -20,19 +17,15 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Positive
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @NotBlank
     private String name;
 
     @Column(name = "description", nullable = false)
-    @NotBlank
     private String description;
 
     @Column(name = "is_available")
-    @NotNull
     private Boolean available;
 
     @Column(name = "owner_id", nullable = false)

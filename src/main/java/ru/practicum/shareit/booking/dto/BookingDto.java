@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.shareit.booking.Status;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 /**
@@ -17,15 +17,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BookingDto {
 
-    private Long itemId;
+    @Positive
+    private Long id;
 
     @NotNull
     @FutureOrPresent
     private LocalDateTime start;
 
     @NotNull
-    @Future
+    @FutureOrPresent
     private LocalDateTime end; // добавить проверку, что дата позже старта
+
+    @Positive
+    private Long itemId;
+
+    @Positive
+    private Long userId;
 
     private Status status;
 
