@@ -31,7 +31,7 @@ public class ItemController {
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto
     ) {
-        Item item = itemService.create(userId,ItemMapper.toItem(itemDto));
+        Item item = itemService.create(userId,ItemMapper.toItem(itemDto, userId));
         log.info("Польователь {} добавил предмет: {}", userId, item.getName());
         return ItemMapper.toItemDto(item);
     }
@@ -42,7 +42,7 @@ public class ItemController {
             @RequestBody ItemDto itemDto,
             @Positive @PathVariable Long itemId
     ) {
-        Item updateItem = itemService.update(ItemMapper.toItem(itemDto), itemId, userId);
+        Item updateItem = itemService.update(ItemMapper.toItem(itemDto, userId), itemId, userId);
         log.info("Владелец {} обновил предмет: {}", userId, updateItem.getName());
         return ItemMapper.toItemDto(updateItem);
     }

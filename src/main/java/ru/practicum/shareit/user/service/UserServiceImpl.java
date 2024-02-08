@@ -51,7 +51,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new DataNotFoundException(String.format("Не найден пользователь c id: %s", userId)));
     }
 
-    private void checkUser(Long id) {
+    @Override
+    public void checkUser(Long id) {
         if(repository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найден пользователь c id: %s", id));
         }

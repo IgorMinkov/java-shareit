@@ -31,6 +31,4 @@ public class Item {
     @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 
-    private Long request;
-
 }

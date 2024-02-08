@@ -16,4 +16,6 @@ public interface UserService {
 
     User getById(Long userId);
 
+    void checkUser(Long id);
+
 }
