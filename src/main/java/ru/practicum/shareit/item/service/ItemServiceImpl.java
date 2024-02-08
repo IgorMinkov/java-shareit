@@ -8,8 +8,10 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.DataNotFoundException;
+import ru.practicum.shareit.item.dto.CommentOutDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemOutDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -98,6 +100,11 @@ public class ItemServiceImpl implements ItemService {
         }
         itemRepository.deleteById(itemId);
         log.info("Удален предмет с id: {} у пользователя с id: {}", itemId, ownerId);
+    }
+
+    @Override
+    public CommentOutDto addComment(Long userId, Comment comment, Long itemId) {
+        return null;
     }
 
     private void checkUser(Long id) {

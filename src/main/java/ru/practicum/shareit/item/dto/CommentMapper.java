@@ -9,7 +9,7 @@ import java.util.List;
 @UtilityClass
 public class CommentMapper {
 
-    public static Comment toComment(CommentDto commentDto, Long itemId, Long userId) {
+    public static Comment toComment(Long userId, CommentDto commentDto, Long itemId) {
         return new Comment(
                 commentDto.getText(),
                 itemId,

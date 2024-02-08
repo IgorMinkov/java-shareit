@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.dto.ItemOutDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -69,12 +67,22 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteUser(
+    public void deleteItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Positive @PathVariable Long itemId
     ) {
         itemService.delete(userId, itemId);
         log.info("Предмет с id: {} удален владельцем", itemId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentOutDto addComment(
+            @RequestHeader(X_SHARED_USER_ID) Long userId,
+            @Valid @RequestBody CommentDto commentDto,
+            @Positive @PathVariable Long itemId
+    ) {
+        log.info("Пользователь с id: {} комментирует ведь с id: {}", userId, itemId);
+        return itemService.addComment(userId, CommentMapper.toComment(userId, commentDto, itemId), itemId);
     }
 
 }
