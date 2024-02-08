@@ -3,9 +3,6 @@ package ru.practicum.shareit.item.dto;
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @UtilityClass
 public class ItemMapper {
 
@@ -25,6 +22,15 @@ public class ItemMapper {
                 item.getAvailable());
     }
 
+    public static Item toItem(ItemOutDto itemOutDto, Long ownerId) {
+        return new Item(
+                itemOutDto.getId(),
+                itemOutDto.getName(),
+                itemOutDto.getDescription(),
+                itemOutDto.getAvailable(),
+                ownerId);
+    }
+
     public static Item toItem(ItemDto itemDto, Long ownerId) {
         return new Item(
                 itemDto.getId(),
@@ -32,14 +38,6 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 ownerId);
-    }
-
-    public static List<ItemOutDto> toItemOutDtoList(List<Item> items) {
-        List<ItemOutDto> result = new ArrayList<>();
-        for (Item item : items) {
-            result.add(toItemOutDto(item));
-        }
-        return result;
     }
 
 }

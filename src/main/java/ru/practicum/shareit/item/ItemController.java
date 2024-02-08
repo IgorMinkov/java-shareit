@@ -47,19 +47,24 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@Positive @PathVariable Long itemId) {
-        Item item = itemService.getById(itemId);
-        log.info("Найден предмет по id: {} ", itemId);
-        return ItemMapper.toItemDto(item);
+    public ItemOutDto getItem(
+            @RequestHeader(X_SHARED_USER_ID) Long userId,
+            @Positive @PathVariable Long itemId
+    ) {
+        return itemService.getById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemOutDto> getAllUserItems(@RequestHeader(X_SHARED_USER_ID) Long userId) {
-        return itemService.getUserItems(userId);
+    public List<ItemOutDto> getAllOwnerItems(
+            @RequestHeader(X_SHARED_USER_ID) Long userId
+    ) {
+        return itemService.getOwnerItems(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam(defaultValue = "") String text) {
+    public List<ItemDto> searchItems(
+            @RequestParam(defaultValue = "") String text
+    ) {
         log.info("Запущен поиск по тексту: {}", text);
         return itemService.searchItems(text).stream()
                 .map(ItemMapper::toItemDto)
@@ -81,7 +86,7 @@ public class ItemController {
             @Valid @RequestBody CommentDto commentDto,
             @Positive @PathVariable Long itemId
     ) {
-        log.info("Пользователь с id: {} комментирует ведь с id: {}", userId, itemId);
+        log.info("Пользователь с id: {} комментирует вещь с id: {}", userId, itemId);
         return itemService.addComment(userId, CommentMapper.toComment(userId, commentDto, itemId), itemId);
     }
 

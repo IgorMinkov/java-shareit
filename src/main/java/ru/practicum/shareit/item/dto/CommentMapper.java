@@ -24,11 +24,6 @@ public class CommentMapper {
                 comment.getCreated());
     }
 
-    public static CommentDto toCommentDto(Comment comment) {
-        return new CommentDto(
-                comment.getText());
-    }
-
     public static List<CommentOutDto> toCommentOutDtoList(List<Comment> comments) {
         List<CommentOutDto> result = new ArrayList<>();
         for (Comment comment : comments) {
