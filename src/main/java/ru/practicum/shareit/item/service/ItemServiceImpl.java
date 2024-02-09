@@ -137,14 +137,15 @@ public class ItemServiceImpl implements ItemService {
         return dto;
     }
 
-    private void checkUser(Long id) {
-        userService.checkUser(id);
-    }
-
-    private void checkItem(Long id) {
+    @Override
+    public void checkItem(Long id) {
         if(itemRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найден предмет c id: %s", id));
         }
+    }
+
+    private void checkUser(Long id) {
+        userService.checkUser(id);
     }
 
 }

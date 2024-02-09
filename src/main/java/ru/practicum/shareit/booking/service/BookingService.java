@@ -16,4 +16,6 @@ public interface BookingService {
 
     List<Booking> getAllOwnerItemBookings(Long userId, String state);
 
+    void checkBooking(Long id);
+
 }

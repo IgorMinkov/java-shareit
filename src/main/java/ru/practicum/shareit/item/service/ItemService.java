@@ -23,4 +23,6 @@ public interface ItemService {
 
     CommentOutDto addComment(Long userId, Comment comment, Long itemId);
 
+    void checkItem(Long itemId);
+
 }
