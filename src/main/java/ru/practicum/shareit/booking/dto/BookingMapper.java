@@ -15,15 +15,14 @@ public class BookingMapper {
                 booking.getStart(),
                 booking.getEnd(),
                 booking.getStatus(),
-                booking.getBookerId(),
-                booking.getItemId());
+                booking.getItem().getId(),
+                booking.getBooker().getId());
     }
 
     public static Booking toBooking(BookingDto bookingDto) {
         Booking booking =  new Booking();
         booking.setStart(bookingDto.getStart());
         booking.setEnd(bookingDto.getEnd());
-        booking.setItemId(bookingDto.getItemId());
         Optional.ofNullable(bookingDto.getStatus()).ifPresentOrElse(booking::setStatus,
                 () -> booking.setStatus(Status.WAITING));
         return booking;

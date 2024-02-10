@@ -10,12 +10,12 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.CommentOutDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -34,18 +34,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item create(Long ownerId, Item item) {
         checkUser(ownerId);
-        itemRepository.save(item);
-        Item newItem = ItemMapper.toItem(getById(item.getId(), ownerId), ownerId);
-        log.info("Добавлен предмет: {}", newItem);
-        return newItem;
+        User owner = userService.getById(ownerId);
+        item.setOwner(owner);
+        log.info("Добавлен предмет: {}", item);
+        return itemRepository.save(item);
     }
 
     @Override
     public Item update(Item item, Long itemId, Long userId) {
         checkUser(userId);
         checkItem(itemId);
-        Item newItem = ItemMapper.toItem(getById(item.getId(), userId), userId);
-        if (!Objects.equals(newItem.getOwnerId(), userId)) {
+        Item newItem = getById(itemId, userId);
+        if (!Objects.equals(newItem.getOwner().getId(), userId)) {
             throw new DataNotFoundException(
                     String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId)
             );
@@ -59,24 +59,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemOutDto getById(Long itemId, Long userId) {
+    public Item getById(Long itemId, Long userId) {
         checkItem(itemId);
         checkUser(userId);
-        Item item = itemRepository.findById(itemId)
+        return itemRepository.findById(itemId)
                 .orElseThrow(() -> new DataNotFoundException(String.format("Не найден предмет c id: %s", itemId)));
-        return addBookingAndCommentsToItem(item, LocalDateTime.now());
     }
 
     @Override
-    public List<ItemOutDto> getOwnerItems(Long userId) {
+    public List<Item> getOwnerItems(Long userId) {
         checkUser(userId);
-        List<Item> userItems = itemRepository.findByOwnerId(userId);
-        List<ItemOutDto> result = new ArrayList<>();
-        for(Item item: userItems) {
-            ItemOutDto dto = addBookingAndCommentsToItem(item, LocalDateTime.now());
-            result.add(dto);
-        }
-        return result;
+        return itemRepository.findByOwnerId(userId);
     }
 
     @Override
@@ -91,8 +84,8 @@ public class ItemServiceImpl implements ItemService {
     public void delete(Long ownerId, Long itemId) {
         checkUser(ownerId);
         checkItem(itemId);
-        Item item = ItemMapper.toItem(getById(itemId, ownerId), ownerId);
-        if (!Objects.equals(item.getOwnerId(), ownerId)) {
+        Item item = getById(itemId, ownerId);
+        if (!Objects.equals(item.getOwner().getId(), ownerId)) {
             throw new DataNotFoundException(
                     String.format("У пользователя %s не найден предмет c id: %s", ownerId, itemId)
             );
@@ -118,9 +111,9 @@ public class ItemServiceImpl implements ItemService {
         return CommentMapper.toCommentOutDto(comment);
     }
 
-    private ItemOutDto addBookingAndCommentsToItem(Item item, LocalDateTime workTime) {
-        ItemOutDto dto = ItemMapper.toItemOutDto(item);
-
+    @Override
+    public ItemOutDto addBookingAndCommentsToItem(ItemOutDto dto) {
+        LocalDateTime workTime = LocalDateTime.now();
         Optional<Booking> lastBooking = bookingRepository
                 .findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(dto.getId(), Status.APPROVED, workTime);
         Optional<Booking> nextBooking = bookingRepository
@@ -139,7 +132,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void checkItem(Long id) {
-        if(itemRepository.existsById(id)) {
+        if(!itemRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найден предмет c id: %s", id));
         }
     }

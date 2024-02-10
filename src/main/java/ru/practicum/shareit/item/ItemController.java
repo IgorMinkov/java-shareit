@@ -30,7 +30,7 @@ public class ItemController {
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto
     ) {
-        Item item = itemService.create(userId,ItemMapper.toItem(itemDto, userId));
+        Item item = itemService.create(userId, ItemMapper.toItem(itemDto));
         log.info("Польователь {} добавил предмет: {}", userId, item.getName());
         return ItemMapper.toItemDto(item);
     }
@@ -41,7 +41,7 @@ public class ItemController {
             @RequestBody ItemDto itemDto,
             @Positive @PathVariable Long itemId
     ) {
-        Item updateItem = itemService.update(ItemMapper.toItem(itemDto, userId), itemId, userId);
+        Item updateItem = itemService.update(ItemMapper.toItem(itemDto), itemId, userId);
         log.info("Владелец {} обновил предмет: {}", userId, updateItem.getName());
         return ItemMapper.toItemDto(updateItem);
     }
@@ -51,14 +51,18 @@ public class ItemController {
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Positive @PathVariable Long itemId
     ) {
-        return itemService.getById(itemId, userId);
+        Item item = itemService.getById(itemId, userId);
+        return itemService.addBookingAndCommentsToItem(ItemMapper.toItemOutDto(item));
     }
 
     @GetMapping
     public List<ItemOutDto> getAllOwnerItems(
             @RequestHeader(X_SHARED_USER_ID) Long userId
     ) {
-        return itemService.getOwnerItems(userId);
+        return itemService.getOwnerItems(userId).stream()
+                .map(ItemMapper::toItemOutDto)
+                .peek(itemService::addBookingAndCommentsToItem)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/search")

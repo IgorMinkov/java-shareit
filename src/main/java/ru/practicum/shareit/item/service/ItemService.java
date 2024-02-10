@@ -13,9 +13,9 @@ public interface ItemService {
 
     Item update(Item item, Long itemId, Long userId);
 
-    ItemOutDto getById(Long itemId, Long userId);
+    Item getById(Long itemId, Long userId);
 
-    List<ItemOutDto> getOwnerItems(Long userId);
+    List<Item> getOwnerItems(Long userId);
 
     List<Item> searchItems(String text);
 
@@ -24,5 +24,7 @@ public interface ItemService {
     CommentOutDto addComment(Long userId, Comment comment, Long itemId);
 
     void checkItem(Long itemId);
+
+    ItemOutDto addBookingAndCommentsToItem(ItemOutDto dto);
 
 }

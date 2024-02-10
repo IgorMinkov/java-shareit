@@ -8,7 +8,7 @@ import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.dto.ItemOutDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -28,14 +28,14 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking addBooking(Long userId, Booking booking) {
         checkUser(userId);
-        checkItem(booking.getItemId());
-        ItemOutDto itemOutDto = itemService.getById(booking.getItemId(), userId);
+        checkItem(booking.getItem().getId());
+        Item item = itemService.getById(booking.getItem().getId(), userId);
 //        if (!Objects.equals(itemOutDto.getId(), userId)) {
 //            throw new DataNotFoundException(
 //                    String.format("Пользователь %s не владелец предмета c id: %s", userId, userId)
 //            );
 //        }
-        booking.setBookerId(userId);
+//        booking.setBookerId(userId);
         return bookingRepository.save(booking);
     }
 
@@ -45,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
         checkBooking(bookingId);
         Booking booking = bookingRepository.findById(bookingId).get();
 
-        if (!Objects.equals(booking.getItemId(), ownerId)) {
+        if (!Objects.equals(booking.getItem().getId(), ownerId)) {
             throw new DataNotFoundException(
                     String.format("Пользователь %s не владелец предмета бронирования", ownerId));
         }
@@ -67,7 +67,7 @@ public class BookingServiceImpl implements BookingService {
         checkBooking(bookingId);
         checkUser(userId);
         Booking booking = bookingRepository.findById(bookingId).get();
-        if (Objects.equals(booking.getBookerId(), userId) || Objects.equals(booking.getId(), userId)) { // нужна ссылка на item в модели
+        if (Objects.equals(booking.getBooker().getId(), userId) || Objects.equals(booking.getId(), userId)) { // нужна ссылка на item в модели
             return booking;
         } else {
             throw new DataNotFoundException("Только владелец вещи или автор бронирования" +
@@ -146,7 +146,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void checkBooking(Long id) {
-        if(bookingRepository.existsById(id)) {
+        if(!bookingRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найдено бронирование c id: %s", id));
         }
     }
