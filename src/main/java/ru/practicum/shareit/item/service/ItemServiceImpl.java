@@ -118,8 +118,8 @@ public class ItemServiceImpl implements ItemService {
                 .findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(dto.getId(), Status.APPROVED, workTime);
         Optional<Booking> nextBooking = bookingRepository
                 .findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(dto.getId(), Status.APPROVED, workTime);
-        lastBooking.ifPresent(booking -> dto.setLastBooking(BookingMapper.toBookingOutDto(booking)));
-        nextBooking.ifPresent(booking -> dto.setNextBooking(BookingMapper.toBookingOutDto(booking)));
+        lastBooking.ifPresent(booking -> dto.setLastBooking(BookingMapper.toBookingShortDto(booking)));
+        nextBooking.ifPresent(booking -> dto.setNextBooking(BookingMapper.toBookingShortDto(booking)));
 
         List<Comment> commentList = commentRepository.findAllByItemId(dto.getId());
         if (!commentList.isEmpty()) {

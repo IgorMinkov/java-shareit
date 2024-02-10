@@ -21,8 +21,8 @@ public class BookingOutDto {
 
     private Status status;
 
-    private ItemOutDto item;
+    private UserDto booker;
 
-    private UserDto bookerId;
+    private ItemOutDto item;
 
 }
