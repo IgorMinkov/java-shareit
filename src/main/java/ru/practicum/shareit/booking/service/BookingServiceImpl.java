@@ -93,13 +93,15 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartAsc(userId, LocalDateTime.now(), LocalDateTime.now());
+                bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartAsc(
+                        userId, LocalDateTime.now(), LocalDateTime.now());
                 break;
             case PAST:
                 bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, LocalDateTime.now());
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(userId, LocalDateTime.now());
+                bookings = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(
+                        userId, LocalDateTime.now());
                 break;
             case WAITING:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, Status.WAITING);
@@ -153,7 +155,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void checkBooking(Long id) {
-        if(!bookingRepository.existsById(id)) {
+        if (!bookingRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найдено бронирование c id: %s", id));
         }
     }

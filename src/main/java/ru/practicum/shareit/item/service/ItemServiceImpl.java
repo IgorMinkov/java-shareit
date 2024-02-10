@@ -102,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime workTime = LocalDateTime.now();
         Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(
                 itemId, userId, Status.APPROVED, workTime);
-        if(booking.isEmpty()) {
+        if (booking.isEmpty()) {
             throw new ValidationException(
                     String.format("Не найдены бронирования для комментария пользователя c id: %s", userId));
         }
@@ -120,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime workTime = LocalDateTime.now();
         ItemOutDto dto = ItemMapper.toItemOutDto(item);
 
-        if(Objects.equals(item.getOwner().getId(), userId)) {
+        if (Objects.equals(item.getOwner().getId(), userId)) {
             Optional<Booking> lastBooking = bookingRepository
                     .findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(dto.getId(), Status.APPROVED, workTime);
             Optional<Booking> nextBooking = bookingRepository
@@ -140,7 +140,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void checkItem(Long id) {
-        if(!itemRepository.existsById(id)) {
+        if (!itemRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найден предмет c id: %s", id));
         }
     }
