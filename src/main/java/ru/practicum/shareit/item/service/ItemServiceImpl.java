@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.DataNotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemOutDto;
@@ -102,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(
                 itemId, userId, Status.APPROVED, workTime);
         if(booking.isEmpty()) {
-            throw new DataNotFoundException(
+            throw new ValidationException(
                     String.format("Не найдены бронирования для комментария пользователя c id: %s", userId));
         }
         Item item = getById(itemId, userId);
