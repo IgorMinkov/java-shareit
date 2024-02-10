@@ -10,6 +10,7 @@ import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -26,16 +27,22 @@ public class BookingServiceImpl implements BookingService {
     private final ItemService itemService;
 
     @Override
-    public Booking addBooking(Long userId, Booking booking) {
+    public Booking addBooking(Long userId, Long itemId, Booking booking) {
         checkUser(userId);
-        checkItem(booking.getItem().getId());
-        Item item = itemService.getById(booking.getItem().getId(), userId);
-//        if (!Objects.equals(itemOutDto.getId(), userId)) {
-//            throw new DataNotFoundException(
-//                    String.format("Пользователь %s не владелец предмета c id: %s", userId, userId)
-//            );
-//        }
-//        booking.setBookerId(userId);
+        checkItem(itemId);
+        Item item = itemService.getById(itemId, userId);
+        User user = userService.getById(userId);
+        if (!item.getAvailable()) {
+            throw new ValidationException(String.format("Предмет %s сейчас недоступен для брони", item.getName()));
+        }
+        if (user.getId().equals(item.getOwner().getId())) {
+            throw new DataNotFoundException("Вы пытаетесь забронировать собственную вещь");
+        }
+        if (booking.getStart().isAfter(booking.getEnd()) || booking.getStart().isEqual(booking.getEnd())) {
+            throw new ValidationException("Дата окончания брони не может быть раньше или совпадать с датой начала");
+        }
+        booking.setItem(item);
+        booking.setBooker(user);
         return bookingRepository.save(booking);
     }
 
@@ -45,19 +52,18 @@ public class BookingServiceImpl implements BookingService {
         checkBooking(bookingId);
         Booking booking = bookingRepository.findById(bookingId).get();
 
-        if (!Objects.equals(booking.getItem().getId(), ownerId)) {
+        if (!Objects.equals(booking.getItem().getOwner().getId(), ownerId)) {
             throw new DataNotFoundException(
                     String.format("Пользователь %s не владелец предмета бронирования", ownerId));
         }
+        if (booking.getStatus().equals(Status.APPROVED)) {
+            throw new ValidationException("Бронирование уже подтверждено");
+        }
         if (approved) {
-            if (booking.getStatus().equals(Status.APPROVED)) {
-                throw new ValidationException("Бронирование уже подтверждено");
-            }
             booking.setStatus(Status.APPROVED);
         } else {
             booking.setStatus(Status.REJECTED);
         }
-
         bookingRepository.save(booking);
         return booking;
     }
@@ -67,7 +73,8 @@ public class BookingServiceImpl implements BookingService {
         checkBooking(bookingId);
         checkUser(userId);
         Booking booking = bookingRepository.findById(bookingId).get();
-        if (Objects.equals(booking.getBooker().getId(), userId) || Objects.equals(booking.getId(), userId)) { // нужна ссылка на item в модели
+        if (Objects.equals(booking.getBooker().getId(), userId)
+                || Objects.equals(booking.getItem().getOwner().getId(), userId)) {
             return booking;
         } else {
             throw new DataNotFoundException("Только владелец вещи или автор бронирования" +

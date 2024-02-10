@@ -21,7 +21,7 @@ public enum State {
         try {
             return State.valueOf(state.toUpperCase());
         } catch (Exception e) {
-            throw new UnknownEnumValueException("Unknown value: " + state);
+            throw new UnknownEnumValueException("Unknown state: " + state);
         }
 
     }

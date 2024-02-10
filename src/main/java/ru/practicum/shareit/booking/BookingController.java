@@ -31,7 +31,8 @@ public class BookingController {
     public BookingOutDto addBooking(@RequestHeader(X_SHARED_USER_ID) Long userId,
                                     @Valid @RequestBody BookingDto bookingDto
     ) {
-        Booking booking = bookingService.addBooking(userId, BookingMapper.toBooking(bookingDto));
+        Booking booking = bookingService.addBooking(
+                userId, bookingDto.getItemId(), BookingMapper.toBooking(bookingDto));
         log.info("Пользователь {} запросил бронирование вещи: {}", userId, bookingDto.getItemId());
         return BookingMapper.toBookingOutDto(booking);
     }
