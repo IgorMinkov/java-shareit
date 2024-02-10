@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.CommentOutDto;
 import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -21,10 +20,10 @@ public interface ItemService {
 
     void delete(Long ownerId, Long itemId);
 
-    CommentOutDto addComment(Long userId, Comment comment, Long itemId);
+    Comment addComment(Long userId, Comment comment, Long itemId);
 
     void checkItem(Long itemId);
 
-    ItemOutDto addBookingAndCommentsToItem(ItemOutDto dto);
+    ItemOutDto addBookingAndComments(Item item, Long userId);
 
 }

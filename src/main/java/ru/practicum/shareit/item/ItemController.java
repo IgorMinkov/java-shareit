@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -52,7 +53,7 @@ public class ItemController {
             @Positive @PathVariable Long itemId
     ) {
         Item item = itemService.getById(itemId, userId);
-        return itemService.addBookingAndCommentsToItem(ItemMapper.toItemOutDto(item));
+        return itemService.addBookingAndComments(item, userId);
     }
 
     @GetMapping
@@ -60,8 +61,7 @@ public class ItemController {
             @RequestHeader(X_SHARED_USER_ID) Long userId
     ) {
         return itemService.getOwnerItems(userId).stream()
-                .map(ItemMapper::toItemOutDto)
-                .peek(itemService::addBookingAndCommentsToItem)
+                .map(item -> itemService.addBookingAndComments(item, userId))
                 .collect(Collectors.toList());
     }
 
@@ -91,7 +91,8 @@ public class ItemController {
             @Positive @PathVariable Long itemId
     ) {
         log.info("Пользователь с id: {} комментирует вещь с id: {}", userId, itemId);
-        return itemService.addComment(userId, CommentMapper.toComment(userId, commentDto, itemId), itemId);
+        Comment comment = itemService.addComment(userId, CommentMapper.toComment(commentDto), itemId);
+        return CommentMapper.toCommentOutDto(comment);
     }
 
 }

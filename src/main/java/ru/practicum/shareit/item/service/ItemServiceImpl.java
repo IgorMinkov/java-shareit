@@ -9,7 +9,7 @@ import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.item.dto.CommentMapper;
-import ru.practicum.shareit.item.dto.CommentOutDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -95,37 +95,44 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentOutDto addComment(Long userId, Comment comment, Long itemId) {
+    public Comment addComment(Long userId, Comment comment, Long itemId) {
         checkUser(userId);
         checkItem(itemId);
         LocalDateTime workTime = LocalDateTime.now();
         Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(
                 itemId, userId, Status.APPROVED, workTime);
-        if(booking.isPresent()) {
-            comment.setCreated(workTime);
-            commentRepository.save(comment);
-        } else {
+        if(booking.isEmpty()) {
             throw new DataNotFoundException(
                     String.format("Не найдены бронирования для комментария пользователя c id: %s", userId));
         }
-        return CommentMapper.toCommentOutDto(comment);
+        Item item = getById(itemId, userId);
+        User user = userService.getById(userId);
+        comment.setCreated(workTime);
+        comment.setItem(item);
+        comment.setAuthor(user);
+        log.info("Добавлен комментарий: {}", comment);
+        return commentRepository.save(comment);
     }
 
     @Override
-    public ItemOutDto addBookingAndCommentsToItem(ItemOutDto dto) {
+    public ItemOutDto addBookingAndComments(Item item, Long userId) {
         LocalDateTime workTime = LocalDateTime.now();
-        Optional<Booking> lastBooking = bookingRepository
-                .findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(dto.getId(), Status.APPROVED, workTime);
-        Optional<Booking> nextBooking = bookingRepository
-                .findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(dto.getId(), Status.APPROVED, workTime);
-        lastBooking.ifPresent(booking -> dto.setLastBooking(BookingMapper.toBookingShortDto(booking)));
-        nextBooking.ifPresent(booking -> dto.setNextBooking(BookingMapper.toBookingShortDto(booking)));
+        ItemOutDto dto = ItemMapper.toItemOutDto(item);
+
+        if(Objects.equals(item.getOwner().getId(), userId)) {
+            Optional<Booking> lastBooking = bookingRepository
+                    .findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(dto.getId(), Status.APPROVED, workTime);
+            Optional<Booking> nextBooking = bookingRepository
+                    .findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(dto.getId(), Status.APPROVED, workTime);
+            lastBooking.ifPresent(booking -> dto.setLastBooking(BookingMapper.toBookingShortDto(booking)));
+            nextBooking.ifPresent(booking -> dto.setNextBooking(BookingMapper.toBookingShortDto(booking)));
+        }
 
         List<Comment> commentList = commentRepository.findAllByItemId(dto.getId());
-        if (!commentList.isEmpty()) {
-            dto.setComments(CommentMapper.toCommentOutDtoList(commentList));
-        } else {
+        if (commentList.isEmpty()) {
             dto.setComments(Collections.emptyList());
+        } else {
+            dto.setComments(CommentMapper.toCommentOutDtoList(commentList));
         }
         return dto;
     }

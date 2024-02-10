@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,19 +24,19 @@ public class Comment {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(name = "item_id", nullable = false)
-    private Long itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item;
 
-    @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
-    public Comment(String text, Long itemId, Long authorId) {
+    public Comment(String text) {
         this.text = text;
-        this.itemId = itemId;
-        this.authorId = authorId;
     }
 
 }

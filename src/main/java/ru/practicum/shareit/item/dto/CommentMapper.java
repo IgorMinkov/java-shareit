@@ -9,19 +9,19 @@ import java.util.List;
 @UtilityClass
 public class CommentMapper {
 
-    public static Comment toComment(Long userId, CommentDto commentDto, Long itemId) {
+    public static Comment toComment(CommentDto commentDto) {
         return new Comment(
-                commentDto.getText(),
-                itemId,
-                userId);
+                commentDto.getText()
+        );
     }
 
     public static CommentOutDto toCommentOutDto(Comment comment) {
         return new CommentOutDto(
                 comment.getId(),
                 comment.getText(),
-                comment.getAuthorId(),
-                comment.getCreated());
+                comment.getAuthor().getName(),
+                comment.getCreated()
+        );
     }
 
     public static List<CommentOutDto> toCommentOutDtoList(List<Comment> comments) {

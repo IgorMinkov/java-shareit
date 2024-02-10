@@ -15,7 +15,7 @@ public class CommentOutDto {
 
     private String text;
 
-    private Long authorId;
+    private String authorName;
 
     private LocalDateTime created;
 
