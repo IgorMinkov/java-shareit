@@ -34,7 +34,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item create(Long ownerId, Item item) {
-        checkUser(ownerId);
         User owner = userService.getById(ownerId);
         item.setOwner(owner);
         log.info("Добавлен предмет: {}", item);
@@ -44,8 +43,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item update(Item item, Long itemId, Long userId) {
         checkUser(userId);
-        checkItem(itemId);
-        Item newItem = getById(itemId, userId);
+        Item newItem = getById(itemId);
         if (!Objects.equals(newItem.getOwner().getId(), userId)) {
             throw new DataNotFoundException(
                     String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId));
@@ -59,9 +57,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getById(Long itemId, Long userId) {
-        checkItem(itemId);
-        checkUser(userId);
+    public Item getById(Long itemId) {
         return itemRepository.findById(itemId)
                 .orElseThrow(() -> new DataNotFoundException(String.format("Не найден предмет c id: %s", itemId)));
     }
@@ -83,8 +79,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(Long ownerId, Long itemId) {
         checkUser(ownerId);
-        checkItem(itemId);
-        Item item = getById(itemId, ownerId);
+        Item item = getById(itemId);
         if (!Objects.equals(item.getOwner().getId(), ownerId)) {
             throw new DataNotFoundException(
                     String.format("У пользователя %s не найден предмет c id: %s", ownerId, itemId)
@@ -105,7 +100,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException(
                     String.format("Не найдены бронирования для комментария пользователя c id: %s", userId));
         }
-        Item item = getById(itemId, userId);
+        Item item = getById(itemId);
         User user = userService.getById(userId);
         comment.setCreated(workTime);
         comment.setItem(item);

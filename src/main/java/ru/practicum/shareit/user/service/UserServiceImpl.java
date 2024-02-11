@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         User newUser = getById(userId);
         Optional.ofNullable(user.getName()).ifPresent(newUser::setName);
         if (user.getEmail() != null) {
-            validateEmail(user.getEmail(), userId);
+            isEmailUnique(user.getEmail(), userId);
             newUser.setEmail(user.getEmail());
         }
         repository.save(newUser);
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void validateEmail(String email, Long userId) {
+    private void isEmailUnique(String email, Long userId) {
         boolean check = repository.findByEmail(email).stream()
                 .filter(user -> !Objects.equals(user.getId(), userId))
                 .anyMatch(user -> user.getEmail().equals(email));

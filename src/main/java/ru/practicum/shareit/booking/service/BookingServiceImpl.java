@@ -28,9 +28,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking addBooking(Long userId, Long itemId, Booking booking) {
-        checkUser(userId);
-        checkItem(itemId);
-        Item item = itemService.getById(itemId, userId);
+        Item item = itemService.getById(itemId);
         User user = userService.getById(userId);
         if (!item.getAvailable()) {
             throw new ValidationException(String.format("Предмет %s сейчас недоступен для брони", item.getName()));
@@ -49,9 +47,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking approveBooking(Long ownerId, Long bookingId, Boolean approved) {
         checkUser(ownerId);
-        checkBooking(bookingId);
-        Booking booking = bookingRepository.findById(bookingId).get();
-
+        Booking booking = getById(bookingId);
         if (!Objects.equals(booking.getItem().getOwner().getId(), ownerId)) {
             throw new DataNotFoundException(
                     String.format("Пользователь %s не владелец предмета бронирования", ownerId));
@@ -70,9 +66,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getBooking(Long userId, Long bookingId) {
-        checkBooking(bookingId);
         checkUser(userId);
-        Booking booking = bookingRepository.findById(bookingId).get();
+        Booking booking = getById(bookingId);
         if (Objects.equals(booking.getBooker().getId(), userId)
                 || Objects.equals(booking.getItem().getOwner().getId(), userId)) {
             return booking;
@@ -154,18 +149,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void checkBooking(Long id) {
-        if (!bookingRepository.existsById(id)) {
-            throw new DataNotFoundException(String.format("Не найдено бронирование c id: %s", id));
-        }
+    public Booking getById(Long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(String.format("Не найдено бронирование c id: %s", id)));
     }
 
     private void checkUser(Long id) {
         userService.checkUser(id);
-    }
-
-    private void checkItem(Long id) {
-        itemService.checkItem(id);
     }
 
 }

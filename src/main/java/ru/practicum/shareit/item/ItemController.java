@@ -49,7 +49,7 @@ public class ItemController {
     public ItemOutDto getItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Positive @PathVariable Long itemId) {
-        Item item = itemService.getById(itemId, userId);
+        Item item = itemService.getById(itemId);
         return itemService.addBookingAndComments(item, userId);
     }
 
