@@ -29,8 +29,7 @@ public class BookingController {
 
     @PostMapping
     public BookingOutDto addBooking(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                    @Valid @RequestBody BookingDto bookingDto
-    ) {
+                                    @Valid @RequestBody BookingDto bookingDto) {
         Booking booking = bookingService.addBooking(
                 userId, bookingDto.getItemId(), BookingMapper.toBooking(bookingDto));
         log.info("Пользователь {} запросил бронирование вещи: {}", userId, bookingDto.getItemId());
@@ -40,17 +39,15 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public BookingOutDto approveBooking(@RequestHeader(X_SHARED_USER_ID) Long ownerId,
                                         @Positive @PathVariable Long bookingId,
-                                        @RequestParam Boolean approved
-    ) {
+                                        @RequestParam Boolean approved) {
         Booking booking = bookingService.approveBooking(ownerId, bookingId, approved);
-                log.info("Пользователь {} реагирует на запрос вещи: {}", ownerId, bookingId);
+        log.info("Пользователь {} реагирует на запрос вещи: {}", ownerId, bookingId);
         return BookingMapper.toBookingOutDto(booking);
     }
 
     @GetMapping("/{bookingId}")
     public BookingOutDto getBooking(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                    @Positive @PathVariable Long bookingId
-    ) {
+                                    @Positive @PathVariable Long bookingId) {
         Booking booking = bookingService.getBooking(userId, bookingId);
         log.info("Пользователь {} запрашивает данные о бронировании: {}", userId, bookingId);
         return BookingMapper.toBookingOutDto(booking);
@@ -58,8 +55,7 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOutDto> getAllUserBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                  @RequestParam(defaultValue = "ALL") String state
-    ) {
+                                                  @RequestParam(defaultValue = "ALL") String state) {
         log.info("Пользователь {} запросил список своих бронирований в статусе: {}", userId, state);
         return bookingService.getAllUserBookings(userId, state).stream()
                 .map(BookingMapper::toBookingOutDto)
@@ -68,12 +64,10 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingOutDto> getAllOwnerItemBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                       @RequestParam(defaultValue = "ALL") String state
-    ) {
+                                                       @RequestParam(defaultValue = "ALL") String state) {
         log.info("Пользователь {} запросил список своих вещей в статусе бронирования: {}", userId, state);
         return bookingService.getAllOwnerItemBookings(userId, state).stream()
                 .map(BookingMapper::toBookingOutDto)
                 .collect(Collectors.toList());
     }
-
 }

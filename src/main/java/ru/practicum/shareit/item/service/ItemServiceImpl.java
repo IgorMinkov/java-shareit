@@ -48,8 +48,7 @@ public class ItemServiceImpl implements ItemService {
         Item newItem = getById(itemId, userId);
         if (!Objects.equals(newItem.getOwner().getId(), userId)) {
             throw new DataNotFoundException(
-                    String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId)
-            );
+                    String.format("Пользователь %s не владелец предмета c id: %s", userId, itemId));
         }
         Optional.ofNullable(item.getName()).ifPresent(newItem::setName);
         Optional.ofNullable(item.getDescription()).ifPresent(newItem::setDescription);

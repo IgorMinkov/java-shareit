@@ -11,8 +11,7 @@ public class CommentMapper {
 
     public static Comment toComment(CommentDto commentDto) {
         return new Comment(
-                commentDto.getText()
-        );
+                commentDto.getText());
     }
 
     public static CommentOutDto toCommentOutDto(Comment comment) {
@@ -20,8 +19,7 @@ public class CommentMapper {
                 comment.getId(),
                 comment.getText(),
                 comment.getAuthor().getName(),
-                comment.getCreated()
-        );
+                comment.getCreated());
     }
 
     public static List<CommentOutDto> toCommentOutDtoList(List<Comment> comments) {

@@ -32,8 +32,7 @@ public class UserController {
     @PatchMapping("/{userId}")
     public UserDto updateUser(
             @RequestBody UserDto userDto,
-            @Positive @PathVariable Long userId
-    ) {
+            @Positive @PathVariable Long userId) {
         User updatedUser = userService.update(UserMapper.toUser(userDto), userId);
         log.info("Обновлен пользователь: {} ", updatedUser);
         return UserMapper.toUserDto(updatedUser);
