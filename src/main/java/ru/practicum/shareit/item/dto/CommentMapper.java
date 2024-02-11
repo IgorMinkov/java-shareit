@@ -10,16 +10,18 @@ import java.util.List;
 public class CommentMapper {
 
     public static Comment toComment(CommentDto commentDto) {
-        return new Comment(
-                commentDto.getText());
+        return Comment.builder()
+                .text(commentDto.getText())
+                .build();
     }
 
     public static CommentOutDto toCommentOutDto(Comment comment) {
-        return new CommentOutDto(
-                comment.getId(),
-                comment.getText(),
-                comment.getAuthor().getName(),
-                comment.getCreated());
+        return CommentOutDto.builder()
+                .id(comment.getId())
+                .text(comment.getText())
+                .authorName(comment.getAuthor().getName())
+                .created(comment.getCreated())
+                .build();
     }
 
     public static List<CommentOutDto> toCommentOutDtoList(List<Comment> comments) {

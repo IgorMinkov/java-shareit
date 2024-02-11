@@ -33,8 +33,4 @@ public class Comment {
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
-    public Comment(String text) {
-        this.text = text;
-    }
-
 }

@@ -12,27 +12,30 @@ import java.util.Optional;
 public class BookingMapper {
 
     public static BookingOutDto toBookingOutDto(Booking booking) {
-        return new BookingOutDto(
-                booking.getId(),
-                booking.getStart(),
-                booking.getEnd(),
-                booking.getStatus(),
-                UserMapper.toUserDto(booking.getBooker()),
-                ItemMapper.toItemOutDto(booking.getItem()));
+        return BookingOutDto.builder()
+                .id(booking.getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .status(booking.getStatus())
+                .booker(UserMapper.toUserDto(booking.getBooker()))
+                .item(ItemMapper.toItemOutDto(booking.getItem()))
+                .build();
     }
 
     public static BookingShortDto toBookingShortDto(Booking booking) {
-        return new BookingShortDto(
-                booking.getId(),
-                booking.getBooker().getId(),
-                booking.getStart(),
-                booking.getEnd());
+        return BookingShortDto.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .build();
     }
 
     public static Booking toBooking(BookingDto bookingDto) {
-        Booking booking =  new Booking();
-        booking.setStart(bookingDto.getStart());
-        booking.setEnd(bookingDto.getEnd());
+        Booking booking = Booking.builder()
+                .start(bookingDto.getStart())
+                .end(bookingDto.getEnd())
+                .build();
         Optional.ofNullable(bookingDto.getStatus()).ifPresentOrElse(booking::setStatus,
                 () -> booking.setStatus(Status.WAITING));
         return booking;
