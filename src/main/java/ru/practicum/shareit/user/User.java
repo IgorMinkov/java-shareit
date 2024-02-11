@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Data
 @Builder
-@EqualsAndHashCode(of = {"id", "email"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -18,6 +17,7 @@ public class User {
     private Long id;
 
     @Column(name = "name", nullable = false, length = 127)
+    @EqualsAndHashCode.Exclude
     private String name;
 
     @Column(name = "email", nullable = false, unique = true, length = 127)

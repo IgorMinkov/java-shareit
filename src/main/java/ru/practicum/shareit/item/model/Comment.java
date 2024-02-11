@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@EqualsAndHashCode(of = {"id"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,10 +23,14 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User author;
 
     @Column(name = "created", nullable = false)

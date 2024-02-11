@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Data
 @Builder
-@EqualsAndHashCode(of = {"id"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,13 +28,8 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User owner;
-
-    public Item(Long id, String name, String description, Boolean available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
 
 }
