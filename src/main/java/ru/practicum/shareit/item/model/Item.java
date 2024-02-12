@@ -1,34 +1,35 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import ru.practicum.shareit.user.User;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.persistence.*;
 
 @Data
-@EqualsAndHashCode(of = {"id"})
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item {
 
-    @Positive
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(name = "name", nullable = false, length = 127)
     private String name;
 
-    @NotBlank
+    @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @NotNull
+    @Column(name = "is_available")
     private Boolean available;
 
-    @JsonProperty("owner")
-    private Long ownerId;
-
-    private Long request;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private User owner;
 
 }

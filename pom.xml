@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<org.apache.commons.version>3.13.0</org.apache.commons.version>
 	</properties>
 
 	<dependencies>
@@ -55,9 +56,19 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>20.1.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.13.0</version>
+			<version>${org.apache.commons.version}</version>
 		</dependency>
 	</dependencies>
 
