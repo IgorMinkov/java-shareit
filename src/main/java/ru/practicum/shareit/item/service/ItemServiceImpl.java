@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -72,17 +73,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getOwnerItems(Long userId) {
+    public List<Item> getOwnerItems(Long userId, Integer from, Integer size) {
         checkUser(userId);
-        return itemRepository.findByOwnerId(userId);
+        return itemRepository.findByOwnerId(userId, PageRequest.of(from/size, size)).toList();
     }
 
     @Override
-    public List<Item> searchItems(String text) {
+    public List<Item> searchItems(String text, Integer from, Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemRepository.search(text);
+        return itemRepository.search(text, PageRequest.of(from/size, size)).toList();
     }
 
     @Override
