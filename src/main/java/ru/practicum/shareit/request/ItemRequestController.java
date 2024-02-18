@@ -46,7 +46,7 @@ public class ItemRequestController {
                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
         return requestService.getAllRequests(userId, from, size).stream()
-                .map(ItemRequestMapper::toItemRequestOutDto)
+                .map(requestService::addItems)
                 .collect(Collectors.toList());
     }
 

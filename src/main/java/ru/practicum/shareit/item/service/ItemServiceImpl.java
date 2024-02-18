@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -30,12 +32,19 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository requestRepository;
     private final UserService userService;
 
     @Override
-    public Item create(Long ownerId, Item item) {
+    public Item create(Long ownerId, Item item, Long requestId) {
         User owner = userService.getById(ownerId);
         item.setOwner(owner);
+        if (requestId != null) {
+            ItemRequest request = requestRepository.findById(requestId)
+                    .orElseThrow(() -> new DataNotFoundException(
+                            String.format("Не найден запрос c id: %s", requestId)));
+            item.setRequest(request);
+        }
         log.info("Добавлен предмет: {}", item);
         return itemRepository.save(item);
     }
