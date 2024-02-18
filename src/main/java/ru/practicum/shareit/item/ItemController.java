@@ -31,7 +31,7 @@ public class ItemController {
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto) {
         Item item = itemService.create(userId, ItemMapper.toItem(itemDto));
-        log.info("Польователь {} добавил предмет: {}", userId, item.getName());
+        log.info("Пользователь {} добавил предмет: {}", userId, item.getName());
         return ItemMapper.toItemDto(item);
     }
 

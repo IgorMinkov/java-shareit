@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.request.ItemRequest;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @UtilityClass
 public class ItemRequestMapper {
@@ -16,12 +15,12 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
-        return ItemRequestDto.builder()
+    public static ItemRequestOutDto toItemRequestOutDto(ItemRequest itemRequest) {
+        return ItemRequestOutDto.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
-                .items(Collections.emptyList())
                 .created(itemRequest.getCreated())
                 .build();
     }
+
 }
