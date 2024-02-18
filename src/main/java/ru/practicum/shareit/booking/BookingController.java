@@ -12,6 +12,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,19 +56,24 @@ public class BookingController {
 
     @GetMapping
     public List<BookingOutDto> getAllUserBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                  @RequestParam(defaultValue = "ALL") String state) {
+                                                  @RequestParam(defaultValue = "ALL") String state,
+                                                  @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                  @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Пользователь {} запросил список своих бронирований в статусе: {}", userId, state);
-        return bookingService.getAllUserBookings(userId, state).stream()
+        return bookingService.getAllUserBookings(userId, state, from, size).stream()
                 .map(BookingMapper::toBookingOutDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/owner")
     public List<BookingOutDto> getAllOwnerItemBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                       @RequestParam(defaultValue = "ALL") String state) {
+                                                       @RequestParam(defaultValue = "ALL") String state,
+                                                       @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                       @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Пользователь {} запросил список своих вещей в статусе бронирования: {}", userId, state);
-        return bookingService.getAllOwnerItemBookings(userId, state).stream()
+        return bookingService.getAllOwnerItemBookings(userId, state, from, size).stream()
                 .map(BookingMapper::toBookingOutDto)
                 .collect(Collectors.toList());
     }
+
 }
