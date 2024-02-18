@@ -1,34 +1,33 @@
 package ru.practicum.shareit.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.user.User;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
-
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "requests")
 public class ItemRequest {
 
-    @Positive
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(name = "description", nullable = false, length = 1023)
     private String description;
 
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User requester;
 
-    @NotNull
-    @PastOrPresent
+    @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
 }
