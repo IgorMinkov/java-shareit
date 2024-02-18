@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.DataNotFoundException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -53,8 +55,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestOutDto addItems(ItemRequest itemRequest) {
         ItemRequestOutDto dto = ItemRequestMapper.toItemRequestOutDto(itemRequest);
-//        List<Item> items = itemService.getById(itemRequest.getId());
-
+        List<ItemDto> itemDtoList = itemService.getByRequestId(itemRequest.getId()).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+        dto.setItems(itemDtoList);
         return dto;
     }
 

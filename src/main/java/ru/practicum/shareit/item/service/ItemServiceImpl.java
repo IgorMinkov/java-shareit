@@ -139,6 +139,15 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
+    public List<Item> getByRequestId(Long requestId) {
+        List<Item> result = itemRepository.findAllByRequestId(requestId);
+        if (result.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return result;
+    }
+
     private void checkUser(Long id) {
         userService.checkUser(id);
     }

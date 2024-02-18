@@ -26,4 +26,6 @@ public interface ItemService {
 
     ItemOutDto addBookingAndComments(Item item, Long userId);
 
+    List<Item> getByRequestId(Long requestId);
+
 }
