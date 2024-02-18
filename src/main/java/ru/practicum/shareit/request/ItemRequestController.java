@@ -55,7 +55,7 @@ public class ItemRequestController {
                                         @Positive @PathVariable("requestId") Long requestId) {
         ItemRequest request = requestService.getRequest(userId, requestId);
         log.info("Пользователь с id {} просматривает запрос с id: {}", userId, requestId);
-        return ItemRequestMapper.toItemRequestOutDto(request);
+        return requestService.addItems(request);
     }
 
 }
