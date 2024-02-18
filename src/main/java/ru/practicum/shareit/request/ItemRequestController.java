@@ -37,7 +37,7 @@ public class ItemRequestController {
     @GetMapping
     public List<ItemRequestOutDto> getUserRequests(@RequestHeader(X_SHARED_USER_ID) Long userId) {
         return requestService.getUserRequests(userId).stream()
-                .map(ItemRequestMapper::toItemRequestOutDto) // добавить список вещей
+                .map(requestService::addItems)
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +46,7 @@ public class ItemRequestController {
                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
         return requestService.getAllRequests(userId, from, size).stream()
-                .map(ItemRequestMapper::toItemRequestOutDto) // добавить список вещей ??
+                .map(ItemRequestMapper::toItemRequestOutDto)
                 .collect(Collectors.toList());
     }
 

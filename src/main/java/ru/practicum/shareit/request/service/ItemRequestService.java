@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.dto.ItemRequestOutDto;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface ItemRequestService {
     List<ItemRequest> getAllRequests(Long userId, Integer from, Integer size);
 
     ItemRequest getRequest(Long userId, Long requestId);
+
+    ItemRequestOutDto addItems(ItemRequest itemRequest);
 
 }
