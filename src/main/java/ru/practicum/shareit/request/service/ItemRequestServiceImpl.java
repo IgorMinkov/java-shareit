@@ -49,7 +49,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         checkUser(userId);
         return requestRepository.findById(requestId)
                 .orElseThrow(() -> new DataNotFoundException(String.format("Не найден запрос c id: %s", requestId)));
-
     }
 
     @Override
