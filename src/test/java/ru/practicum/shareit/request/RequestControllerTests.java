@@ -64,8 +64,8 @@ public class RequestControllerTests {
 
         testItemDto = ItemDto.builder()
                 .id(1L)
-                .name("sdfv")
-                .description("sdfvbnhgf")
+                .name("itemName")
+                .description("item description")
                 .available(true)
                 .requestId(testItemRequestId)
                 .build();
