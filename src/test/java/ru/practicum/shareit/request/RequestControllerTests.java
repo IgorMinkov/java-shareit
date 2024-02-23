@@ -37,10 +37,10 @@ public class RequestControllerTests {
 
     private ItemRequestDto testDto;
     private ItemRequestOutDto testOutDto;
-
+    private ItemRequest testItemRequest;
     private Long testItemRequestId;
 
-    private final LocalDateTime testTime = LocalDateTime.of(2024, 2, 2, 2, 2);
+    private LocalDateTime testTime = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
@@ -48,6 +48,12 @@ public class RequestControllerTests {
 
         testDto = new ItemRequestDto();
         testDto.setDescription("item request 1");
+
+        testItemRequest = ItemRequest.builder()
+                .id(testItemRequestId)
+                .description("item request 1")
+                .created(testTime)
+                .build();
 
         testOutDto = ItemRequestOutDto.builder()
                 .id(testItemRequestId)
@@ -59,7 +65,7 @@ public class RequestControllerTests {
     @Test
     void addRequest() throws Exception {
         when(itemRequestService.addRequest(any(ItemRequest.class), anyLong()))
-                .thenReturn(ItemRequestMapper.toItemRequest(testDto));
+                .thenReturn(testItemRequest);
 
         mvc.perform(post("/requests")
                         .content(mapper.writeValueAsString(testDto))
@@ -68,10 +74,11 @@ public class RequestControllerTests {
                         .accept(MediaType.APPLICATION_JSON)
                         .header(X_SHARED_USER_ID, 1L))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(testItemRequestDto.getId()), Long.class))
-                .andExpect(jsonPath("$.description", is(testItemRequestDto.getDescription()), String.class));
+                .andExpect(jsonPath("$.id", is(testOutDto.getId()), Long.class))
+                .andExpect(jsonPath("$.description", is(testOutDto.getDescription()), String.class));
 
-        verify(itemRequestService, times(1)).addRequest(testItemRequestDto, 1L);
+        verify(itemRequestService, times(1)).addRequest(
+                ItemRequestMapper.toItemRequest(testDto), 1L);
     }
 
 
