@@ -111,7 +111,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void addItem() throws Exception {
+    void addItemShouldReturn200AndItemDto() throws Exception {
         when(itemService.create(anyLong(), any(Item.class), anyLong()))
                 .thenReturn(item);
 
@@ -133,7 +133,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void updateItem() throws Exception {
+    void updateItemShouldReturn200AndItemDto() throws Exception {
         when(itemService.update(any(Item.class), anyLong(), anyLong()))
                 .thenReturn(item);
 
@@ -154,7 +154,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void getItemById() throws Exception {
+    void getItemByIdShouldReturn200AndItemOutDto() throws Exception {
         when(itemService.getById(anyLong()))
                 .thenReturn(item);
         when(itemService.addBookingAndComments(any(Item.class), anyLong()))
@@ -177,7 +177,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void getAllOwnerItems() throws Exception {
+    void getAllOwnerItemsShouldReturn200AndItemOutDtoList() throws Exception {
         when(itemService.getOwnerItems(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(item));
 
@@ -198,7 +198,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void searchItems() throws Exception {
+    void searchItemsShouldReturn200AndItemOutDtoList() throws Exception {
         when(itemService.searchItems(anyString(), anyInt(), anyInt()))
                 .thenReturn(List.of(item));
 
@@ -225,7 +225,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    void addComment() throws Exception {
+    void addCommentShouldReturn200AndCommentOutDto() throws Exception {
         when(itemService.addComment(anyLong(), any(Comment.class), anyLong()))
                 .thenReturn(comment);
 

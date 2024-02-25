@@ -55,7 +55,7 @@ public class ItemRepositoryTests {
     }
 
     @Test
-    void search() {
+    void searchTest() {
 
         List<Item> descriptionSearchResult = itemRepository.search("search", PageRequest.of(0, 1))
                 .toList();

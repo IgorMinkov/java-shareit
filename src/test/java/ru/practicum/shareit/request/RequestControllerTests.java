@@ -72,7 +72,7 @@ public class RequestControllerTests {
     }
 
     @Test
-    void addRequest() throws Exception {
+    void addRequestShouldReturn200AndItemRequestOutDto() throws Exception {
         when(itemRequestService.addRequest(any(ItemRequest.class), anyLong()))
                 .thenReturn(testItemRequest);
 
@@ -91,7 +91,7 @@ public class RequestControllerTests {
     }
 
     @Test
-    void getRequestById() throws Exception {
+    void getRequestByIdShouldReturn200AndItemRequestOutDto() throws Exception {
         when(itemRequestService.getRequest(anyLong(), anyLong()))
                 .thenReturn(testItemRequest);
 
@@ -114,7 +114,7 @@ public class RequestControllerTests {
     }
 
     @Test
-    void getUserRequests() throws Exception {
+    void getUserRequestsShouldReturn200AndItemRequestOutDtoList() throws Exception {
         when(itemRequestService.getUserRequests(anyLong()))
                 .thenReturn(List.of(testItemRequest));
 
@@ -135,7 +135,7 @@ public class RequestControllerTests {
     }
 
     @Test
-    void getAllRequests() throws Exception {
+    void getAllRequestsShouldReturn200AndItemRequestOutDtoList() throws Exception {
         when(itemRequestService.getAllRequests(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(testItemRequest));
 
