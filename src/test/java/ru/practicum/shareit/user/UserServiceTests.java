@@ -131,7 +131,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void checkUserFail() {
+    void getAndCheckUserFail() {
         when(userRepository.existsById(anyLong())).thenThrow(DataNotFoundException.class);
 
         assertThrows(DataNotFoundException.class, () -> userService.checkUser(-1L));
@@ -139,6 +139,15 @@ public class UserServiceTests {
 
         verify(userRepository, times(1)).existsById(-1L);
         verify(userRepository, times(1)).findById(-1L);
+    }
+
+    @Test
+    void checkUser() {
+        when(userRepository.existsById(anyLong())).thenReturn(false);
+
+        assertThrows(DataNotFoundException.class, () -> userService.checkUser(-1L));
+
+        verify(userRepository, times(1)).existsById(-1L);
     }
 
 }

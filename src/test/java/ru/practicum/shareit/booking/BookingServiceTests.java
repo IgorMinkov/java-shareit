@@ -154,6 +154,21 @@ public class BookingServiceTests {
     }
 
     @Test
+    void getBookingByOwnerOrBooker() {
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(booking));
+
+        Booking testBooking = bookingService.getBooking(ownerId, bookingId);
+
+        assertEquals(testBooking.getId(), booking.getId());
+        assertEquals(testBooking.getItem(), booking.getItem());
+        assertEquals(testBooking.getBooker(), booking.getBooker());
+        assertEquals(testBooking.getStatus(), booking.getStatus());
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+    }
+
+    @Test
     void getBookingById() {
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(booking));
 
