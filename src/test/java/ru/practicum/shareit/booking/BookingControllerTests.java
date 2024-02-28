@@ -60,7 +60,6 @@ public class BookingControllerTests {
                 .itemId(1L)
                 .start(BOOKING_START)
                 .end(BOOKING_END)
-                .status(Status.WAITING)
                 .build();
 
         User user = User.builder()
