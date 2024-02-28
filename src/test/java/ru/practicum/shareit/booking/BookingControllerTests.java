@@ -14,6 +14,8 @@ import ru.practicum.shareit.booking.dto.BookingOutDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.UnknownEnumValueException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemOutDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -203,6 +205,34 @@ public class BookingControllerTests {
 
         verify(bookingService, times(1))
                 .getAllOwnerItemBookings(1L, "ALL", 0, 10);
+    }
+
+    @Test
+    void getAllUserBookingsWithWrongStateValueShouldReturn400() throws Exception {
+        when(bookingService.getAllUserBookings(anyLong(), anyString(), anyInt(), anyInt()))
+                .thenThrow(UnknownEnumValueException.class);
+
+        mvc.perform(get("/bookings")
+                        .param("state", "TESTFAIL")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(X_SHARED_USER_ID, 1L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addBookingForNotAvailableItemShouldReturn400() throws Exception {
+        when(bookingService.addBooking(anyLong(), anyLong(), any(Booking.class)))
+                .thenThrow(ValidationException.class);
+
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(X_SHARED_USER_ID, 1L))
+                .andExpect(status().isBadRequest());
     }
 
 }

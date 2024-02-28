@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.DataNotFoundException;
+import ru.practicum.shareit.exception.EmailAlreadyExistException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
@@ -135,6 +136,29 @@ public class UserControllerTests {
                 .andExpect(status().isNotFound());
 
         verify(userService).getById(unknownUserId);
+    }
+
+    @Test
+    void updateUserWithNotUniqueEmailReturnStatusConflict() throws Exception {
+        UserDto wrongEmailUserDto = UserDto.builder()
+                .id(2L)
+                .name("Boris")
+                .email("alexFirst@yandex.ru")
+                .build();
+
+        when(userService.getById(2L)).thenReturn(UserMapper.toUser(wrongEmailUserDto));
+
+        when(userService.update(any(User.class), anyLong()))
+                .thenThrow(EmailAlreadyExistException.class);
+
+        mvc.perform(patch("/users/{userId}", 2L)
+                        .content(mapper.writeValueAsString(wrongEmailUserDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+
+        verify(userService).update(UserMapper.toUser(wrongEmailUserDto), 2L);
     }
 
 }
