@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getOwnerItems(Long userId, Integer from, Integer size) {
         checkUser(userId);
-        return itemRepository.findByOwnerId(userId, PageRequest.of(from/size, size)).toList();
+        return itemRepository.findByOwnerId(userId, PageRequest.of(from / size, size)).toList();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemRepository.search(text, PageRequest.of(from/size, size)).toList();
+        return itemRepository.search(text, PageRequest.of(from / size, size)).toList();
     }
 
     @Override

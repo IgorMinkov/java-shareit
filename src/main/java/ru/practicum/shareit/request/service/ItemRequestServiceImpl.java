@@ -43,7 +43,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequest> getAllRequests(Long userId, Integer from, Integer size) {
         checkUser(userId);
-        return requestRepository.findByIdIsNotOrderByCreatedAsc(userId, PageRequest.of(from/size, size)).toList();
+        return requestRepository.findByIdIsNotOrderByCreatedAsc(userId, PageRequest.of(from / size, size)).toList();
     }
 
     @Override
