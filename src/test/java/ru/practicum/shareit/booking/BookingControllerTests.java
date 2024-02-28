@@ -42,8 +42,10 @@ public class BookingControllerTests {
     @Autowired
     private MockMvc mvc;
 
-    private final LocalDateTime start = LocalDateTime.of(2024, 3, 2, 2, 2);
-    private final LocalDateTime end = LocalDateTime.of(2024, 3, 3, 3, 3);
+    public static final LocalDateTime BOOKING_START = LocalDateTime.of(
+            2024, 3, 2, 2, 2);
+    public static final LocalDateTime BOOKING_END = LocalDateTime.of(
+            2024, 3, 3, 3, 3);
 
     private BookingDto bookingDto;
     private BookingOutDto bookingOutDto;
@@ -56,8 +58,8 @@ public class BookingControllerTests {
 
         bookingDto = BookingDto.builder()
                 .itemId(1L)
-                .start(start)
-                .end(end)
+                .start(BOOKING_START)
+                .end(BOOKING_END)
                 .status(Status.WAITING)
                 .build();
 
@@ -91,8 +93,8 @@ public class BookingControllerTests {
 
         booking = Booking.builder()
                 .id(bookingId)
-                .start(start)
-                .end(end)
+                .start(BOOKING_START)
+                .end(BOOKING_END)
                 .item(item)
                 .booker(user)
                 .status(Status.APPROVED)
@@ -100,8 +102,8 @@ public class BookingControllerTests {
 
         bookingOutDto = BookingOutDto.builder()
                 .id(bookingId)
-                .start(start)
-                .end(end)
+                .start(BOOKING_START)
+                .end(BOOKING_END)
                 .status(Status.APPROVED)
                 .booker(userDto)
                 .item(itemOutDto)
