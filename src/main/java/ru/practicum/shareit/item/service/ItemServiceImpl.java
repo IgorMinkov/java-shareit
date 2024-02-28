@@ -42,8 +42,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOwner(owner);
         if (requestId != null) {
             ItemRequest request = requestRepository.findById(requestId)
-                    .orElseThrow(() -> new DataNotFoundException(
-                            String.format("Не найден запрос c id: %s", requestId)));
+                    .orElseThrow(() -> new DataNotFoundException(String.format("Не найден запрос c id: %s", requestId)));
             item.setRequest(request);
         }
         log.info("Добавлен предмет: {}", item);
