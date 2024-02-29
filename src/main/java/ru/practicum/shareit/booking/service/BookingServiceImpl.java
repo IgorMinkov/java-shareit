@@ -128,9 +128,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllOwnerItemBookings(Long userId, String state, Integer from, Integer size) {
         checkUser(userId);
-        if (itemService.getOwnerItems(userId, 0, 10).isEmpty()) {
+        if (itemService.getOwnerItems(userId, 0, size).isEmpty()) {
             throw new ValidationException(
-                    String.format("Не найдень предметов для бронирования у пользователя c id: %s", userId));
+                    String.format("Не найдены предметы для бронирования у пользователя c id: %s", userId));
         }
         List<Booking> bookings = new ArrayList<>();
 
