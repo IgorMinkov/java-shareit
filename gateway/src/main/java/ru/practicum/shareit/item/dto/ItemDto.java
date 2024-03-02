@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,22 +9,21 @@ import javax.validation.constraints.Positive;
 
 @Data
 @Builder
-@AllArgsConstructor
 public class ItemDto {
 
-    @Positive
+    @Positive(message = "id must be positive")
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name cannot be empty or contain spaces.")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Available cannot be null")
     private Boolean available;
 
-    @Positive
+    @Positive(message = "request_id must be positive")
     private Long requestId;
 
 }

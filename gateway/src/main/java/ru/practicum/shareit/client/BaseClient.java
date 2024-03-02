@@ -12,8 +12,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import static ru.practicum.shareit.util.Constant.HEADER_USER;
-
 public class BaseClient {
     protected final RestTemplate rest;
 
@@ -102,7 +100,7 @@ public class BaseClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         if (userId != null) {
-            headers.set(HEADER_USER, String.valueOf(userId));
+            headers.set("X-Sharer-User-Id", String.valueOf(userId));
         }
         return headers;
     }

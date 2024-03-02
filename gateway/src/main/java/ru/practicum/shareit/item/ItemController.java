@@ -2,95 +2,85 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.*;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Validated
-@RestController
+@Controller
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
 
     public static final String X_SHARED_USER_ID = "X-Sharer-User-Id";
 
-    private final ItemService itemService;
+    private final ItemClient itemClient;
 
     @PostMapping
-    public ItemDto addItem(
+    public ResponseEntity<Object> addItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto) {
-        Item item = itemService.create(userId, ItemMapper.toItem(itemDto), itemDto.getRequestId());
-        log.info("Пользователь {} добавил предмет: {}", userId, item.getName());
-        return ItemMapper.toItemDto(item);
+        log.info("Пользователь {} добавляет предмет: {}", userId, itemDto.getId());
+        return itemClient.addItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(
+    public ResponseEntity<Object> updateItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @RequestBody ItemDto itemDto,
             @Positive @PathVariable Long itemId) {
-        Item updateItem = itemService.update(ItemMapper.toItem(itemDto), itemId, userId);
-        log.info("Владелец {} обновил предмет: {}", userId, updateItem.getName());
-        return ItemMapper.toItemDto(updateItem);
+        log.info("Владелец {} обновил предмет: {}", userId, itemId);
+        return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    public ItemOutDto getItem(
+    public ResponseEntity<Object> getItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Positive @PathVariable Long itemId) {
-        Item item = itemService.getById(itemId);
-        return itemService.addBookingAndComments(item, userId);
+        log.info("Пользователь {} запросил предмет: {}", userId, itemId);
+        return itemClient.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemOutDto> getAllOwnerItems(
+    public ResponseEntity<Object> getAllOwnerItems(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
             @Positive @RequestParam(defaultValue = "10") Integer size) {
-        return itemService.getOwnerItems(userId, from, size).stream()
-                .map(item -> itemService.addBookingAndComments(item, userId))
-                .collect(Collectors.toList());
+        log.info("Пользователь {} запросил список своих вещей", userId);
+        return itemClient.getItemsUser(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(
+    public ResponseEntity<Object> searchItems(
             @RequestParam(defaultValue = "") String text,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
             @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Запущен поиск по тексту: {}", text);
-        return itemService.searchItems(text, from, size).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        return itemClient.searchItem(text, from, size);
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(
+    public ResponseEntity<Object> deleteItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Positive @PathVariable Long itemId) {
-        itemService.delete(userId, itemId);
-        log.info("Предмет с id: {} удален владельцем", itemId);
+        log.info("Владелец {} удаляет предмет: {}", userId, itemId);
+        return itemClient.deleteItem(userId, itemId);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentOutDto addComment(
+    public ResponseEntity<Object> addComment(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody CommentDto commentDto,
             @Positive @PathVariable Long itemId) {
         log.info("Пользователь с id: {} комментирует вещь с id: {}", userId, itemId);
-        Comment comment = itemService.addComment(userId, CommentMapper.toComment(commentDto), itemId);
-        return CommentMapper.toCommentOutDto(comment);
+        return itemClient.addComment(userId, itemId, commentDto);
     }
 
 }

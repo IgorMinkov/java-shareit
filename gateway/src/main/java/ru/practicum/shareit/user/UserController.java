@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Validated
@@ -22,39 +21,35 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
-        User user = userService.create(UserMapper.toUser(userDto));
-        log.info("Добавлен пользователь: {} ", user);
-        return UserMapper.toUserDto(user);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserDto userDto) {
+        log.info("Запрос на создание пользователя с id: {} ", userDto.getId());
+        return userClient.addUser(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(
+    public ResponseEntity<Object> updateUser(
             @RequestBody UserDto userDto,
             @Positive @PathVariable Long userId) {
-        User updatedUser = userService.update(UserMapper.toUser(userDto), userId);
-        log.info("Обновлен пользователь: {} ", updatedUser);
-        return UserMapper.toUserDto(updatedUser);
+        log.info("Запрос на обновление пользователя: {} ", userId);
+        return userClient.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@Positive @PathVariable Long userId) {
-        userService.delete(userId);
-        log.info("Пользователь с id: {} удален", userId);
+    public ResponseEntity<Object> deleteUser(@Positive @PathVariable Long userId) {
+        log.info("Запрос на удаление пользователя с id: {}", userId);
+        return userClient.deleteUser(userId);
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@Positive @PathVariable Long userId) {
-        User user = userService.getById(userId);
-        log.info("Найден пользователь по id: {} ", user);
-        return UserMapper.toUserDto(user);
+    public ResponseEntity<Object> getUser(@Positive @PathVariable Long userId) {
+        log.info("Запрос на пользователя по id: {} ", userId);
+        return userClient.getUser(userId);
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAll().stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<Object> getAllUsers() {
+        log.info("Запрос на всех пользователей");
+        return userClient.getAllUsers();
     }
 
 }
