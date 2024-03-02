@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -16,6 +17,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -30,12 +33,18 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository requestRepository;
     private final UserService userService;
 
     @Override
-    public Item create(Long ownerId, Item item) {
+    public Item create(Long ownerId, Item item, Long requestId) {
         User owner = userService.getById(ownerId);
         item.setOwner(owner);
+        if (requestId != null) {
+            ItemRequest request = requestRepository.findById(requestId)
+                    .orElseThrow(() -> new DataNotFoundException(String.format("Не найден запрос c id: %s", requestId)));
+            item.setRequest(request);
+        }
         log.info("Добавлен предмет: {}", item);
         return itemRepository.save(item);
     }
@@ -63,17 +72,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getOwnerItems(Long userId) {
+    public List<Item> getOwnerItems(Long userId, Integer from, Integer size) {
         checkUser(userId);
-        return itemRepository.findByOwnerId(userId);
+        return itemRepository.findByOwnerId(userId, PageRequest.of(from / size, size)).toList();
     }
 
     @Override
-    public List<Item> searchItems(String text) {
+    public List<Item> searchItems(String text, Integer from, Integer size) {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        return itemRepository.search(text);
+        return itemRepository.search(text, PageRequest.of(from / size, size)).toList();
     }
 
     @Override
@@ -137,6 +146,15 @@ public class ItemServiceImpl implements ItemService {
         if (!itemRepository.existsById(id)) {
             throw new DataNotFoundException(String.format("Не найден предмет c id: %s", id));
         }
+    }
+
+    @Override
+    public List<Item> getByRequestId(Long requestId) {
+        List<Item> result = itemRepository.findAllByRequestId(requestId);
+        if (result.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return result;
     }
 
     private void checkUser(Long id) {

@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ItemService {
 
-    Item create(Long ownerId, Item item);
+    Item create(Long ownerId, Item item, Long requestId);
 
     Item update(Item item, Long itemId, Long userId);
 
     Item getById(Long itemId);
 
-    List<Item> getOwnerItems(Long userId);
+    List<Item> getOwnerItems(Long userId, Integer from, Integer size);
 
-    List<Item> searchItems(String text);
+    List<Item> searchItems(String text, Integer from, Integer size);
 
     void delete(Long ownerId, Long itemId);
 
@@ -25,5 +25,7 @@ public interface ItemService {
     void checkItem(Long itemId);
 
     ItemOutDto addBookingAndComments(Item item, Long userId);
+
+    List<Item> getByRequestId(Long requestId);
 
 }

@@ -26,4 +26,6 @@ public class ItemOutDto {
 
     private List<CommentOutDto> comments;
 
+    private Long requestId;
+
 }

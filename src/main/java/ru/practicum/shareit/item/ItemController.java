@@ -11,6 +11,7 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +31,8 @@ public class ItemController {
     public ItemDto addItem(
             @RequestHeader(X_SHARED_USER_ID) Long userId,
             @Valid @RequestBody ItemDto itemDto) {
-        Item item = itemService.create(userId, ItemMapper.toItem(itemDto));
-        log.info("Польователь {} добавил предмет: {}", userId, item.getName());
+        Item item = itemService.create(userId, ItemMapper.toItem(itemDto), itemDto.getRequestId());
+        log.info("Пользователь {} добавил предмет: {}", userId, item.getName());
         return ItemMapper.toItemDto(item);
     }
 
@@ -55,17 +56,21 @@ public class ItemController {
 
     @GetMapping
     public List<ItemOutDto> getAllOwnerItems(
-            @RequestHeader(X_SHARED_USER_ID) Long userId) {
-        return itemService.getOwnerItems(userId).stream()
+            @RequestHeader(X_SHARED_USER_ID) Long userId,
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size) {
+        return itemService.getOwnerItems(userId, from, size).stream()
                 .map(item -> itemService.addBookingAndComments(item, userId))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(
-            @RequestParam(defaultValue = "") String text) {
+            @RequestParam(defaultValue = "") String text,
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Запущен поиск по тексту: {}", text);
-        return itemService.searchItems(text).stream()
+        return itemService.searchItems(text, from, size).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
