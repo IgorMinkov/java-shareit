@@ -47,8 +47,9 @@ public class RequestControllerTests {
     void setUp() {
         testItemRequestId = 1L;
 
-        testDto = new ItemRequestDto();
-        testDto.setDescription("item request 1");
+        testDto = ItemRequestDto.builder()
+                .description("item request 1")
+                .build();
 
         testItemRequest = ItemRequest.builder()
                 .id(testItemRequestId)
