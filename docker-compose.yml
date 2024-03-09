@@ -25,12 +25,12 @@ services:
       - TZ=Europe/Moscow
 
   db:
-    image: postgres:16
+    image: postgres:14.3-alpine
     container_name: db
     ports:
-      - "6542:5432"
+      - "6541:5432"
     volumes:
-      - /var/lib/postgresql/data/
+      - /var/lib/postgresql/data
     environment:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
