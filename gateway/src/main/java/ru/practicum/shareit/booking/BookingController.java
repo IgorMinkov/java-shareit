@@ -48,7 +48,7 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<Object> getAllUserBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                  @RequestParam(defaultValue = "ALL") String stateParam,
+                                                  @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
         State state = State.getEnumValue(stateParam);
@@ -58,7 +58,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getAllOwnerItemBookings(@RequestHeader(X_SHARED_USER_ID) Long userId,
-                                                       @RequestParam(defaultValue = "ALL") String stateParam,
+                                                       @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
                                                        @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                                        @Positive @RequestParam(defaultValue = "10") Integer size) {
         State state = State.getEnumValue(stateParam);
