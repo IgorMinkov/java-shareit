@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Page<Item> findByOwnerId(Long userId, Pageable pageable);
+    Page<Item> findByOwnerIdOrderById(Long userId, Pageable pageable);
 
     @Query("select i from Item i " +
             "where upper(i.name) like upper(concat('%', ?1, '%')) " +

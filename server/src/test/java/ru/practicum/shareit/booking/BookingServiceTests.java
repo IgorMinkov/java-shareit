@@ -332,7 +332,7 @@ public class BookingServiceTests {
     @Test
     void getAllOwnerItemBookings() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(itemRepository.findByOwnerId(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(item)));
+        when(itemRepository.findByOwnerIdOrderById(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(item)));
 
         String state = "ALL";
         when(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(anyLong(), any(PageRequest.class)))
@@ -423,7 +423,7 @@ public class BookingServiceTests {
     @Test
     void getAllItemBookingsForNotHaveItemsOwnerFail() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(itemRepository.findByOwnerId(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
+        when(itemRepository.findByOwnerIdOrderById(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of()));
 
         assertThrows(ValidationException.class, () -> bookingService.getAllOwnerItemBookings(
                 bookerId, "ALL", 0, 10));
