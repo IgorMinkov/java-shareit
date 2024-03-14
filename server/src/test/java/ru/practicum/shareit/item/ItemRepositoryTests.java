@@ -71,8 +71,8 @@ public class ItemRepositoryTests {
 
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
         itemRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 }
